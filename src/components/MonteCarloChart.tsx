@@ -18,7 +18,13 @@ const MonteCarloChart: React.FC<MonteCarloChartProps> = ({ data }) => {
   return (
     <Card className="w-full">
       <CardHeader className="pb-2 bg-gray-100 border-b">
-        <CardTitle className="text-lg">Monte Carlo Simulation</CardTitle>
+        <CardTitle className="text-lg flex items-center justify-between">
+          <span>Monte Carlo Simulation</span>
+          <span className="text-sm font-normal text-muted-foreground flex items-center">
+            <span className="inline-block w-3 h-3 bg-[#ea384c] mr-2"></span>
+            Target EBITDA
+          </span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-80"> {/* Increased height */}

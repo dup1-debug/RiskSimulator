@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LabelList, ReferenceLine } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, LabelList } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyDriverData } from '@/api/mockData';
 
@@ -9,12 +9,18 @@ interface KeyDriversChartProps {
 }
 
 const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
-  // Transform data for recharts
-  const chartData = data.map(driver => ({
-    name: driver.name,
-    deviation_from_plan: driver.deviation_from_plan,
-    deviation_from_target: driver.deviation_from_target,
-  }));
+  // Transform data for recharts - using predefined categories
+  const categories = ['Revenue', 'Revenue growth', 'EBITDA margin growth', 'EBITDA Margin'];
+  
+  // Map the data to our predefined categories (or use placeholder values if needed)
+  const chartData = categories.map(category => {
+    const matchingData = data.find(item => item.name === category);
+    return {
+      name: category,
+      deviation_from_plan: matchingData?.deviation_from_plan || 0,
+      deviation_from_target: matchingData?.deviation_from_target || 0,
+    };
+  });
 
   const renderCustomizedLabel = (props: any) => {
     const { x, y, width, height, value } = props;
@@ -34,8 +40,18 @@ const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-2 bg-gray-100 border-b">
+      <CardHeader className="pb-2 bg-gray-100 border-b flex flex-row justify-between items-center">
         <CardTitle className="text-lg">Key Drivers of EBITDA Target Risk</CardTitle>
+        <Legend 
+          payload={[
+            { value: 'Deviation from Key Revenue Streams', color: '#82ca9d' },
+            { value: 'Deviation from Key EBITDA targets', color: '#1976d2' }
+          ]}
+          layout="horizontal"
+          verticalAlign="top"
+          align="right"
+          wrapperStyle={{ fontSize: '0.75rem', paddingBottom: 0 }}
+        />
       </CardHeader>
       <CardContent>
         <div className="h-80"> {/* Increased height */}
@@ -60,7 +76,6 @@ const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
                 }}
               />
               <Tooltip />
-              <Legend />
               <Bar 
                 name="Deviation from Key Revenue Streams" 
                 dataKey="deviation_from_plan" 
@@ -75,17 +90,6 @@ const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
               >
                 <LabelList dataKey="deviation_from_target" content={renderCustomizedLabel} />
               </Bar>
-              <ReferenceLine 
-                y={0} 
-                stroke="#ea384c" 
-                strokeWidth={2}
-                strokeDasharray="3 3"
-                label={{
-                  value: 'Target',
-                  position: 'right',
-                  fill: '#ea384c'
-                }} 
-              />
             </BarChart>
           </ResponsiveContainer>
         </div>
