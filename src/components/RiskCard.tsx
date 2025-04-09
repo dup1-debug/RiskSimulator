@@ -25,16 +25,32 @@ const RiskCard: React.FC<RiskCardProps> = ({ risk, isSelected, onClick }) => {
     }
   };
 
+  const getBgColor = (isSelected: boolean, level: string) => {
+    if (!isSelected) return 'bg-white';
+    
+    switch (level.toLowerCase()) {
+      case 'high':
+        return 'bg-red-50';
+      case 'medium':
+        return 'bg-orange-50';
+      case 'low':
+        return 'bg-green-50';
+      default:
+        return 'bg-blue-50';
+    }
+  };
+
   return (
     <div
       onClick={onClick}
       className={cn(
-        'border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md',
-        isSelected ? 'border-blue-500 shadow-sm bg-blue-50' : 'border-gray-200'
+        'border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md min-w-[240px] h-[180px] flex flex-col justify-between',
+        isSelected ? 'border-blue-500 shadow-sm' : 'border-gray-200',
+        getBgColor(isSelected, risk.risk_level)
       )}
     >
-      <h3 className="font-medium text-center mb-2">{risk.name}</h3>
-      <div className="space-y-2 text-sm">
+      <h3 className="font-medium text-center text-lg mb-2">{risk.name}</h3>
+      <div className="space-y-3 text-sm">
         <div className="flex justify-between">
           <span className="text-gray-600">Q2 2025 EBITDA:</span>
           <span className="font-semibold">${risk.current_ebitda.toLocaleString()}</span>
@@ -45,8 +61,8 @@ const RiskCard: React.FC<RiskCardProps> = ({ risk, isSelected, onClick }) => {
         </div>
       </div>
       <div className="mt-3 flex items-center justify-center">
-        <CircleFill className={cn('h-4 w-4 mr-2', getRiskColor(risk.risk_level))} />
-        <span className={cn('font-medium', getRiskColor(risk.risk_level))}>
+        <CircleFill className={cn('h-5 w-5 mr-2', getRiskColor(risk.risk_level))} />
+        <span className={cn('font-medium text-base', getRiskColor(risk.risk_level))}>
           {risk.risk_level}
         </span>
       </div>

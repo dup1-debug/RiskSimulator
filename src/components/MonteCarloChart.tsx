@@ -17,16 +17,16 @@ const MonteCarloChart: React.FC<MonteCarloChartProps> = ({ data }) => {
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-2 bg-gray-100 border-b">
         <CardTitle className="text-lg">Monte Carlo Simulation</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-64">
+        <div className="h-80"> {/* Increased height */}
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
               margin={{
-                top: 5,
+                top: 20,
                 right: 30,
                 left: 20,
                 bottom: 25,
@@ -53,13 +53,14 @@ const MonteCarloChart: React.FC<MonteCarloChartProps> = ({ data }) => {
               <Bar dataKey="frequency" fill="#1976d2" />
               <ReferenceLine 
                 x={data.target_value.toString()} 
-                stroke="red" 
+                stroke="#ea384c" 
                 strokeWidth={2}
                 label={{
                   position: 'top',
-                  value: 'TARGET',
-                  fill: 'red',
+                  value: 'TARGET EBITDA',
+                  fill: '#ea384c',
                   fontSize: 12,
+                  fontWeight: 'bold'
                 }} 
               />
             </BarChart>

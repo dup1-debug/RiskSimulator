@@ -5,7 +5,7 @@ import { RiskProvider } from '@/contexts/RiskContext';
 
 const Index: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 py-4">
       <RiskProvider>
         <RiskDashboard />
       </RiskProvider>
