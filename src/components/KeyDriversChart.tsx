@@ -9,12 +9,15 @@ interface KeyDriversChartProps {
 }
 
 const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
-  // Transform data for recharts - using predefined categories
-  const categories = ['Revenue', 'Revenue growth', 'EBITDA margin growth', 'EBITDA Margin'];
+  // Transform data for recharts - ensure all four categories are present
+  const categories = ['Revenue', 'Revenue Growth', 'EBITDA Margin Growth', 'EBITDA Margin'];
   
-  // Map the data to our predefined categories (or use placeholder values if needed)
+  // Map the data to our predefined categories
   const chartData = categories.map(category => {
-    const matchingData = data.find(item => item.name === category);
+    // Find the matching data item, case-insensitive comparison to handle different casing
+    const matchingData = data.find(item => 
+      item.name.toLowerCase() === category.toLowerCase());
+    
     return {
       name: category,
       deviation_from_plan: matchingData?.deviation_from_plan || 0,
@@ -27,11 +30,12 @@ const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
     return (
       <text 
         x={x + width / 2} 
-        y={y - 5} 
+        y={value > 0 ? y - 5 : y + 15} // Adjust position based on value
         fill="#333" 
         textAnchor="middle" 
         dominantBaseline="middle"
         fontSize={11}
+        fontWeight="bold"
       >
         {`${value}%`}
       </text>
@@ -40,33 +44,38 @@ const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-2 bg-gray-100 border-b flex flex-row justify-between items-center">
-        <CardTitle className="text-lg">Key Drivers of EBITDA Target Risk</CardTitle>
-        <Legend 
-          payload={[
-            { value: 'Deviation from Key Revenue Streams', color: '#82ca9d' },
-            { value: 'Deviation from Key EBITDA targets', color: '#1976d2' }
-          ]}
-          layout="horizontal"
-          verticalAlign="top"
-          align="right"
-          wrapperStyle={{ fontSize: '0.75rem', paddingBottom: 0 }}
-        />
+      <CardHeader className="pb-2 bg-gray-100 border-b">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">Key Drivers of EBITDA Target Risk</CardTitle>
+          <div className="flex items-center gap-4 text-xs">
+            <div className="flex items-center">
+              <span className="inline-block w-3 h-3 bg-[#82ca9d] mr-2"></span>
+              <span>Deviation from Avg Revenue Growth</span>
+            </div>
+            <div className="flex items-center">
+              <span className="inline-block w-3 h-3 bg-[#1976d2] mr-2"></span>
+              <span>Deviation from Avg EBITDA Margin</span>
+            </div>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="h-80"> {/* Increased height */}
+        <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
               margin={{
-                top: 20,
+                top: 30,
                 right: 30,
                 left: 20,
                 bottom: 25,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis 
+                dataKey="name"
+                tick={{ fontSize: 12 }}
+              />
               <YAxis 
                 label={{ 
                   value: 'Percentage (%)', 
@@ -74,19 +83,23 @@ const KeyDriversChart: React.FC<KeyDriversChartProps> = ({ data }) => {
                   position: 'insideLeft',
                   style: { textAnchor: 'middle' }
                 }}
+                tickCount={7}
+                domain={[0, 'dataMax + 3']}
               />
-              <Tooltip />
+              <Tooltip formatter={(value) => [`${value}%`, '']} />
               <Bar 
-                name="Deviation from Key Revenue Streams" 
+                name="Deviation from Avg Revenue Growth" 
                 dataKey="deviation_from_plan" 
                 fill="#82ca9d" 
+                barSize={35}
               >
                 <LabelList dataKey="deviation_from_plan" content={renderCustomizedLabel} />
               </Bar>
               <Bar 
-                name="Deviation from Key EBITDA targets" 
+                name="Deviation from Avg EBITDA Margin" 
                 dataKey="deviation_from_target" 
                 fill="#1976d2" 
+                barSize={35}
               >
                 <LabelList dataKey="deviation_from_target" content={renderCustomizedLabel} />
               </Bar>

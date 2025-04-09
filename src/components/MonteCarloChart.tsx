@@ -27,7 +27,7 @@ const MonteCarloChart: React.FC<MonteCarloChartProps> = ({ data }) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-80"> {/* Increased height */}
+        <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
@@ -58,7 +58,7 @@ const MonteCarloChart: React.FC<MonteCarloChartProps> = ({ data }) => {
               <Tooltip />
               <Bar dataKey="frequency" fill="#1976d2" />
               <ReferenceLine 
-                x={data.target_value.toString()} 
+                x={data.target_value?.toString()} 
                 stroke="#ea384c" 
                 strokeWidth={2}
                 label={{
