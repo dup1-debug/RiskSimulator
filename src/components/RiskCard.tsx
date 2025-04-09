@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { RiskData } from '@/api/mockData';
-import { CircleFill } from 'lucide-react';
+import { CircleFill } from '@/components/ui/icons';
 
 interface RiskCardProps {
   risk: RiskData;
