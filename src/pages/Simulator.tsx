@@ -24,7 +24,7 @@ const Simulator: React.FC = () => {
           <h2 className="text-xl font-semibold text-red-600">Error</h2>
           <p className="mt-2">{error}</p>
           <button 
-            className="mt-4 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+            className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900"
             onClick={() => window.location.reload()}
           >
             Retry
@@ -35,9 +35,9 @@ const Simulator: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-6xl">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="flex items-center mb-8">
-        <Link to="/" className="flex items-center text-gray-600 hover:text-purple-600 mr-4">
+        <Link to="/" className="flex items-center text-gray-600 hover:text-gray-900 mr-4">
           <ArrowLeft className="h-4 w-4 mr-1" />
           <span>Back</span>
         </Link>
@@ -48,7 +48,7 @@ const Simulator: React.FC = () => {
         {loading ? (
           // Skeleton loaders for cards
           Array(7).fill(0).map((_, i) => (
-            <Skeleton key={i} className="h-36 w-full rounded-lg" />
+            <Skeleton key={i} className="h-48 w-full rounded-lg" />
           ))
         ) : (
           riskData.map((risk) => (

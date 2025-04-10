@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
-import { CircleFill } from '@/components/ui/icons';
 import { RiskData } from '@/api/mockData';
 import { Lightbulb } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -12,16 +11,6 @@ import {
   HoverCardContent, 
   HoverCardTrigger 
 } from '@/components/ui/hover-card';
-
-// Format number to K, M, etc.
-const formatNumber = (value: number): string => {
-  if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(1)}M`;
-  } else if (value >= 1000) {
-    return `${(value / 1000).toFixed(1)}K`;
-  }
-  return value.toString();
-};
 
 interface EbitdaAdjustmentCardProps {
   risk: RiskData;
@@ -58,20 +47,20 @@ const EbitdaAdjustmentCard: React.FC<EbitdaAdjustmentCardProps> = ({
     }
   };
 
-  // Get risk level circle color (for the filled circles)
-  const getRiskCircleColor = (level: string) => {
+  // Get risk level background color
+  const getRiskBgColor = (level: string) => {
     switch (level.toLowerCase()) {
       case 'high':
-        return '#EF4444'; // red-500
+        return 'bg-red-100';
       case 'medium':
-        return '#F97316'; // orange-500
+        return 'bg-orange-100';
       case 'low':
-        return '#22C55E'; // green-500
+        return 'bg-green-100';
       default:
-        return '#6B7280'; // gray-500
+        return 'bg-gray-100';
     }
   };
-
+  
   // Calculate min and max values for the slider (0 to 2x target)
   const minValue = 0;  
   const maxValue = risk.target_ebitda * 2;
@@ -109,30 +98,30 @@ const EbitdaAdjustmentCard: React.FC<EbitdaAdjustmentCardProps> = ({
     // Show toast notification
     toast({
       title: "EBITDA Target Updated",
-      description: `${risk.name} target updated to ${formatNumber(sliderValue)}`,
+      description: `${risk.name} target updated to ${sliderValue.toLocaleString()}`,
     });
   };
 
   return (
-    <Card className="overflow-hidden shadow-sm border-gray-200">
+    <Card className="overflow-hidden shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
       {/* Card Header with gradient background */}
-      <div className="bg-gradient-to-r from-teal-400 to-teal-300 p-3">
+      <div className="bg-gray-800 p-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-lg text-white">{risk.name}</h3>
           <HoverCard>
             <HoverCardTrigger asChild>
               <div className="cursor-help">
-                <Lightbulb className="h-5 w-5 text-yellow-300" />
+                <Lightbulb className="h-5 w-5 text-yellow-400 hover:text-yellow-300" />
               </div>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80">
+            <HoverCardContent className="w-80 bg-white shadow-lg p-4">
               <div className="space-y-2">
-                <h4 className="font-medium">EBITDA Target Guidance</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="font-medium text-gray-900">EBITDA Target Guidance</h4>
+                <p className="text-sm text-gray-600">
                   Adjusting your EBITDA target affects your risk profile. Higher targets increase risk, 
                   while lower targets reduce risk but may impact growth projections.
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-gray-600">
                   The current market average growth for this sector is approximately 8-10% YoY.
                 </p>
               </div>
@@ -142,54 +131,52 @@ const EbitdaAdjustmentCard: React.FC<EbitdaAdjustmentCardProps> = ({
       </div>
       
       {/* Card Body */}
-      <div className="p-4">
-        <div className="grid grid-cols-12 gap-4 items-center">
+      <div className="p-5">
+        <div className="grid grid-cols-12 gap-6 items-center">
           {/* Left column - Current values */}
           <div className="col-span-3">
-            <div className="space-y-2">
-              <div>
-                <div className="text-xs text-gray-500">EBITDA Q1 2025:</div>
-                <div className="font-medium">{formatNumber(risk.current_ebitda)}</div>
+            <div className="space-y-3">
+              <div className="p-3 bg-gray-50 rounded-md shadow-sm">
+                <div className="text-xs text-gray-500 font-medium">EBITDA Q1 2025:</div>
+                <div className="font-medium text-gray-900">{risk.current_ebitda.toLocaleString()}</div>
               </div>
               
-              <div>
-                <div className="text-xs text-gray-500">EBITDA Target Q2 2025:</div>
-                <div className="font-medium">{formatNumber(risk.target_ebitda)}</div>
+              <div className="p-3 bg-gray-50 rounded-md shadow-sm">
+                <div className="text-xs text-gray-500 font-medium">EBITDA Target Q2 2025:</div>
+                <div className="font-medium text-gray-900">{risk.target_ebitda.toLocaleString()}</div>
               </div>
               
-              <div className="flex items-center mt-2 gap-1.5">
-                <span className="text-xs text-gray-500">Current Risk:</span>
-                <div 
-                  className="h-4 w-4 rounded-full" 
-                  style={{ backgroundColor: getRiskCircleColor(risk.risk_level) }}
-                ></div>
-                <span className="text-xs capitalize">{risk.risk_level}</span>
+              <div className="p-3 rounded-md flex items-center gap-2" style={{ backgroundColor: getRiskBgColor(risk.risk_level) }}>
+                <span className="text-xs text-gray-700 font-medium">Current Risk:</span>
+                <span className={`text-sm font-medium capitalize ${getRiskColor(risk.risk_level)}`}>
+                  {risk.risk_level}
+                </span>
               </div>
             </div>
           </div>
           
           {/* Middle column - Slider */}
           <div className="col-span-6">
-            <div>
-              <div className="text-xs text-gray-600 mb-2 font-medium">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+              <div className="text-sm text-gray-700 mb-3 font-medium">
                 Adjust EBITDA Target for Q2 2025:
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-medium">{formatNumber(minValue)}</span>
+                <span className="text-xs font-medium text-gray-500">{minValue.toLocaleString()}</span>
                 <div className="flex-grow">
                   <Slider
                     value={[sliderValue]}
                     min={minValue}
                     max={maxValue}
-                    step={Math.max(50000, risk.target_ebitda / 200)}
+                    step={1}
                     onValueChange={handleSliderChange}
                   />
                 </div>
-                <span className="text-xs font-medium">{formatNumber(maxValue)}</span>
+                <span className="text-xs font-medium text-gray-500">{maxValue.toLocaleString()}</span>
               </div>
-              <div className="text-center mt-1">
-                <span className="text-sm font-medium text-purple-700">
-                  {formatNumber(sliderValue)}
+              <div className="text-center mt-3">
+                <span className="text-base font-bold text-gray-800 bg-gray-100 px-3 py-1 rounded-full">
+                  {sliderValue.toLocaleString()}
                 </span>
               </div>
             </div>
@@ -198,19 +185,16 @@ const EbitdaAdjustmentCard: React.FC<EbitdaAdjustmentCardProps> = ({
           {/* Right column - Updated risk & Apply button */}
           <div className="col-span-3">
             <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-gray-500">Updated Risk:</span>
-                <div 
-                  className="h-4 w-4 rounded-full" 
-                  style={{ backgroundColor: getRiskCircleColor(updatedRiskLevel) }}
-                ></div>
-                <span className="text-xs capitalize">{updatedRiskLevel}</span>
+              <div className="p-3 rounded-md w-full text-center" style={{ backgroundColor: getRiskBgColor(updatedRiskLevel) }}>
+                <span className="text-xs text-gray-700 font-medium block mb-1">Updated Risk:</span>
+                <span className={`text-sm font-medium capitalize ${getRiskColor(updatedRiskLevel)}`}>
+                  {updatedRiskLevel}
+                </span>
               </div>
               <Button 
-                size="sm"
                 onClick={applyChanges}
                 disabled={isApplied}
-                className={`bg-purple-600 hover:bg-purple-700 w-full ${isApplied ? 'opacity-50' : ''}`}
+                className={`bg-gray-800 hover:bg-gray-900 w-full ${isApplied ? 'opacity-50' : ''}`}
               >
                 Apply
               </Button>
