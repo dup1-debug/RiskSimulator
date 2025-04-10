@@ -28,9 +28,7 @@ const RiskDashboard: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">Risk Simulator</h1>
-      
+    <div className="container mx-auto px-4">
       {/* Risk Cards - Scrollable horizontal container */}
       <div className="mb-8 w-full">
         <div className="flex overflow-x-auto pb-4 gap-4 snap-x">

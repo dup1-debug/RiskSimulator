@@ -57,18 +57,20 @@ const MonteCarloChart: React.FC<MonteCarloChartProps> = ({ data }) => {
               />
               <Tooltip />
               <Bar dataKey="frequency" fill="#1976d2" />
-              <ReferenceLine 
-                x={data.target_value?.toString()} 
-                stroke="#ea384c" 
-                strokeWidth={2}
-                label={{
-                  position: 'top',
-                  value: 'TARGET EBITDA',
-                  fill: '#ea384c',
-                  fontSize: 12,
-                  fontWeight: 'bold'
-                }} 
-              />
+              {data.target_value && (
+                <ReferenceLine 
+                  x={data.target_value.toString()} 
+                  stroke="#ea384c" 
+                  strokeWidth={2}
+                  label={{
+                    position: 'top',
+                    value: 'TARGET EBITDA',
+                    fill: '#ea384c',
+                    fontSize: 12,
+                    fontWeight: 'bold'
+                  }} 
+                />
+              )}
             </BarChart>
           </ResponsiveContainer>
         </div>
