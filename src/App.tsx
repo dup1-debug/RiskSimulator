@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Simulator from "./pages/Simulator";
 import NotFound from "./pages/NotFound";
+import { RiskProvider } from "./contexts/RiskContext";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +19,14 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/simulator" element={<Simulator />} />
+          <Route 
+            path="/simulator" 
+            element={
+              <RiskProvider>
+                <Simulator />
+              </RiskProvider>
+            } 
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
