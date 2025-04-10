@@ -35,20 +35,20 @@ const Simulator: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-5xl">
-      <div className="flex items-center mb-6">
+    <div className="container mx-auto px-4 py-6 max-w-6xl">
+      <div className="flex items-center mb-8">
         <Link to="/" className="flex items-center text-gray-600 hover:text-purple-600 mr-4">
           <ArrowLeft className="h-4 w-4 mr-1" />
           <span>Back</span>
         </Link>
-        <h1 className="text-2xl font-bold">EBITDA Target Simulator</h1>
+        <h1 className="text-2xl font-bold text-gray-800">EBITDA Target Simulator</h1>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-6">
         {loading ? (
           // Skeleton loaders for cards
           Array(7).fill(0).map((_, i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-lg" />
+            <Skeleton key={i} className="h-36 w-full rounded-lg" />
           ))
         ) : (
           riskData.map((risk) => (
