@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useRiskContext } from '@/contexts/RiskContext';
 import EbitdaAdjustmentCard from '@/components/EbitdaAdjustmentCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Simulator: React.FC = () => {
   const { riskData, loading, error } = useRiskContext();
@@ -22,7 +24,7 @@ const Simulator: React.FC = () => {
           <h2 className="text-xl font-semibold text-red-600">Error</h2>
           <p className="mt-2">{error}</p>
           <button 
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="mt-4 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
             onClick={() => window.location.reload()}
           >
             Retry
@@ -33,24 +35,20 @@ const Simulator: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">Risk Simulator - Changing EBITDA Targets</h1>
+    <div className="container mx-auto px-4 py-6 max-w-5xl">
+      <div className="flex items-center mb-6">
+        <Link to="/" className="flex items-center text-gray-600 hover:text-purple-600 mr-4">
+          <ArrowLeft className="h-4 w-4 mr-1" />
+          <span>Back</span>
+        </Link>
+        <h1 className="text-2xl font-bold">EBITDA Target Simulator</h1>
+      </div>
       
       <div className="space-y-4">
         {loading ? (
           // Skeleton loaders for cards
           Array(7).fill(0).map((_, i) => (
-            <div key={i} className="border rounded-lg p-4 bg-white">
-              <Skeleton className="h-8 w-48 mb-4" />
-              <div className="flex justify-between mb-4">
-                <div>
-                  <Skeleton className="h-4 w-36 mb-2" />
-                  <Skeleton className="h-4 w-36" />
-                </div>
-                <Skeleton className="h-10 w-10 rounded-full" />
-              </div>
-              <Skeleton className="h-8 w-full mb-4" />
-            </div>
+            <Skeleton key={i} className="h-32 w-full rounded-lg" />
           ))
         ) : (
           riskData.map((risk) => (
