@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRiskContext } from '@/contexts/RiskContext';
 import RiskCard from '@/components/RiskCard';
+import RiskAdjustmentPanel from '@/components/RiskAdjustmentPanel';
 import MonteCarloChart from '@/components/MonteCarloChart';
 import KeyDriversChart from '@/components/KeyDriversChart';
 import KpiTable from '@/components/KpiTable';
@@ -9,6 +10,19 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const RiskDashboard: React.FC = () => {
   const { riskData, selectedRisk, loading, error, selectRisk, selectedRiskId } = useRiskContext();
+  const [adjustedValues, setAdjustedValues] = useState<Record<string, any>>({});
+
+  const handleUpdate = (riskId: string, updatedValues: any) => {
+    setAdjustedValues(prev => ({
+      ...prev,
+      [riskId]: {
+        ...(prev[riskId] || {}),
+        ...updatedValues
+      }
+    }));
+    
+    // In a real application, this would update the charts and visualizations
+  };
 
   if (error) {
     return (
@@ -17,7 +31,7 @@ const RiskDashboard: React.FC = () => {
           <h2 className="text-xl font-semibold text-red-600">Error</h2>
           <p className="mt-2">{error}</p>
           <button 
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="mt-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900"
             onClick={() => window.location.reload()}
           >
             Retry
@@ -44,11 +58,14 @@ const RiskDashboard: React.FC = () => {
             ))
           ) : (
             riskData.map((risk) => (
-              <div key={risk.id} className="flex-shrink-0 snap-start">
-                <RiskCard
+              <div 
+                key={risk.id} 
+                className="flex-shrink-0 snap-start min-w-[300px]"
+                onClick={() => selectRisk(risk.id)}
+              >
+                <RiskAdjustmentPanel
                   risk={risk}
-                  isSelected={selectedRiskId === risk.id}
-                  onClick={() => selectRisk(risk.id)}
+                  onUpdate={(values) => handleUpdate(risk.id, values)}
                 />
               </div>
             ))

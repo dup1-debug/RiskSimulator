@@ -1,20 +1,26 @@
 
 import React, { useState } from 'react';
 import { useRiskContext } from '@/contexts/RiskContext';
-import EbitdaAdjustmentCard from '@/components/EbitdaAdjustmentCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RiskAdjustmentPanel from '@/components/RiskAdjustmentPanel';
 
 const Simulator: React.FC = () => {
   const { riskData, loading, error } = useRiskContext();
-  const [adjustedValues, setAdjustedValues] = useState<Record<string, number>>({});
+  const [adjustedValues, setAdjustedValues] = useState<Record<string, any>>({});
 
-  const handleAdjustment = (riskId: string, newValue: number) => {
+  const handleUpdate = (riskId: string, updatedValues: any) => {
     setAdjustedValues(prev => ({
       ...prev,
-      [riskId]: newValue
+      [riskId]: {
+        ...(prev[riskId] || {}),
+        ...updatedValues
+      }
     }));
+    
+    console.log('Updated values:', { riskId, ...updatedValues });
+    // In a real application, this would trigger updates to charts and other visualizations
   };
 
   if (error) {
@@ -41,7 +47,7 @@ const Simulator: React.FC = () => {
           <ArrowLeft className="h-4 w-4 mr-1" />
           <span>Back</span>
         </Link>
-        <h1 className="text-2xl font-bold text-gray-800">EBITDA Target Simulator</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Risk Adjustment Simulator</h1>
       </div>
       
       <div className="space-y-6">
@@ -52,11 +58,10 @@ const Simulator: React.FC = () => {
           ))
         ) : (
           riskData.map((risk) => (
-            <EbitdaAdjustmentCard
+            <RiskAdjustmentPanel
               key={risk.id}
               risk={risk}
-              adjustedValue={adjustedValues[risk.id] || risk.target_ebitda}
-              onAdjustment={(newValue) => handleAdjustment(risk.id, newValue)}
+              onUpdate={(values) => handleUpdate(risk.id, values)}
             />
           ))
         )}

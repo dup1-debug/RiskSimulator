@@ -13,7 +13,7 @@ const Index: React.FC = () => {
         <Link to="/simulator">
           <Button variant="outline" className="flex items-center gap-2">
             <Sliders className="h-4 w-4" />
-            <span>EBITDA Simulator</span>
+            <span>Risk Adjustment Simulator</span>
           </Button>
         </Link>
       </div>
