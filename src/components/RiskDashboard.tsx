@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { useRiskContext } from '@/contexts/RiskContext';
 import RiskCard from '@/components/RiskCard';
-import RiskAdjustmentPanel from '@/components/RiskAdjustmentPanel';
+import RiskLegend from '@/components/RiskLegend';
 import MonteCarloChart from '@/components/MonteCarloChart';
 import KeyDriversChart from '@/components/KeyDriversChart';
 import KpiTable from '@/components/KpiTable';
@@ -43,6 +42,8 @@ const RiskDashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4">
+      <RiskLegend />
+      
       {/* Risk Cards - Scrollable horizontal container */}
       <div className="mb-8 w-full">
         <div className="flex overflow-x-auto pb-4 gap-4 snap-x">
@@ -63,9 +64,10 @@ const RiskDashboard: React.FC = () => {
                 className="flex-shrink-0 snap-start min-w-[300px]"
                 onClick={() => selectRisk(risk.id)}
               >
-                <RiskAdjustmentPanel
+                <RiskCard
                   risk={risk}
-                  onUpdate={(values) => handleUpdate(risk.id, values)}
+                  isSelected={risk.id === selectedRiskId}
+                  onClick={() => selectRisk(risk.id)}
                 />
               </div>
             ))
