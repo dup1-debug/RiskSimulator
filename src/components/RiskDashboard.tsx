@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useRiskContext } from '@/contexts/RiskContext';
 import RiskCard from '@/components/RiskCard';
@@ -61,7 +62,7 @@ const RiskDashboard: React.FC = () => {
             riskData.map((risk) => (
               <div 
                 key={risk.id} 
-                className="flex-shrink-0 snap-start min-w-[300px]"
+                className="flex-shrink-0 snap-start min-w-[300px] max-w-[340px]"
                 onClick={() => selectRisk(risk.id)}
               >
                 <RiskCard
