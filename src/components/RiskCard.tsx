@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { RiskData } from '@/api/mockData';
 import { Card } from '@/components/ui/card';
@@ -33,6 +32,7 @@ const RiskCard: React.FC<RiskCardProps> = ({ risk, isSelected, onClick }) => {
   const [marginMin, setMarginMin] = useState(21);
   const [marginMax, setMarginMax] = useState(42);
   const [updatedRiskLevel, setUpdatedRiskLevel] = useState(risk.risk_level);
+  const [isRangeApplied, setIsRangeApplied] = useState(true);
 
   // Get risk level color
   const getRiskColor = (level: string) => {
@@ -102,7 +102,7 @@ const RiskCard: React.FC<RiskCardProps> = ({ risk, isSelected, onClick }) => {
 
   return (
     <Card 
-      className="w-full bg-white shadow-sm hover:shadow-md transition-shadow"
+      className="w-full max-w-[340px] bg-white shadow-sm hover:shadow-md transition-shadow"
       onClick={() => onClick()}
     >
       {/* Card Header */}
@@ -179,70 +179,97 @@ const RiskCard: React.FC<RiskCardProps> = ({ risk, isSelected, onClick }) => {
             </div>
           </AccordionContent>
         </AccordionItem>
-
-        {/* Range Parameters Section */}
+        
+        {/* Range Parameters Section - Updated Layout */}
         <AccordionItem value="range" className="border-b-0">
           <AccordionTrigger className="py-2 hover:no-underline">
             <span className="text-sm font-medium">Range Parameters</span>
           </AccordionTrigger>
           
           <AccordionContent className="pt-0 pb-2">
-            <div className="space-y-3">
-              {/* Revenue */}
-              <div className="grid grid-cols-12 gap-1 items-center text-sm">
-                <div className="col-span-3 text-xs text-gray-500">Revenue:</div>
-                <div className="col-span-4 text-xs text-gray-500">
-                  Current: 17-58%
+            <div className="space-y-4">
+              {/* Current Ranges */}
+              <div className="bg-gray-50 p-3 rounded-md">
+                <h4 className="text-xs font-medium text-gray-700 mb-2">Range Considered for Risk Computation:</h4>
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <div></div>
+                  <div className="text-center text-xs text-gray-500">Min</div>
+                  <div className="text-center text-xs text-gray-500">Max</div>
+                  
+                  <div className="text-xs text-gray-700">Revenue Growth:</div>
+                  <div className="text-center text-xs">{17}%</div>
+                  <div className="text-center text-xs">{58}%</div>
+                  
+                  <div className="text-xs text-gray-700">EBITDA Margin:</div>
+                  <div className="text-center text-xs">{21}%</div>
+                  <div className="text-center text-xs">{42}%</div>
                 </div>
-                <div className="col-span-2">
-                  <Input
-                    value={revenueMin}
-                    onChange={(e) => setRevenueMin(Number(e.target.value))}
-                    className="h-6 text-xs px-1"
-                    type="number"
-                  />
-                </div>
-                <div className="col-span-2">
-                  <Input
-                    value={revenueMax}
-                    onChange={(e) => setRevenueMax(Number(e.target.value))}
-                    className="h-6 text-xs px-1"
-                    type="number"
-                  />
-                </div>
-                <div className="col-span-1 text-xs text-gray-500">%</div>
               </div>
-              
-              {/* Margin */}
-              <div className="grid grid-cols-12 gap-1 items-center text-sm">
-                <div className="col-span-3 text-xs text-gray-500">Margin:</div>
-                <div className="col-span-4 text-xs text-gray-500">
-                  Current: 21-42%
+
+              {/* Adjustable Ranges */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-medium text-gray-700">Adjusted Range for Q2 2025:</h4>
+                <div className="grid grid-cols-3 gap-2 items-center">
+                  <div></div>
+                  <div className="text-center text-xs text-gray-500">Min</div>
+                  <div className="text-center text-xs text-gray-500">Max</div>
+                  
+                  <div className="text-xs text-gray-700">Revenue Growth:</div>
+                  <div>
+                    <Input
+                      type="number"
+                      value={revenueMin}
+                      onChange={(e) => {
+                        setRevenueMin(Number(e.target.value));
+                        setIsRangeApplied(false);
+                      }}
+                      className="h-6 text-xs px-1 text-center"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="number"
+                      value={revenueMax}
+                      onChange={(e) => {
+                        setRevenueMax(Number(e.target.value));
+                        setIsRangeApplied(false);
+                      }}
+                      className="h-6 text-xs px-1 text-center"
+                    />
+                  </div>
+                  
+                  <div className="text-xs text-gray-700">EBITDA Margin:</div>
+                  <div>
+                    <Input
+                      type="number"
+                      value={marginMin}
+                      onChange={(e) => {
+                        setMarginMin(Number(e.target.value));
+                        setIsRangeApplied(false);
+                      }}
+                      className="h-6 text-xs px-1 text-center"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="number"
+                      value={marginMax}
+                      onChange={(e) => {
+                        setMarginMax(Number(e.target.value));
+                        setIsRangeApplied(false);
+                      }}
+                      className="h-6 text-xs px-1 text-center"
+                    />
+                  </div>
                 </div>
-                <div className="col-span-2">
-                  <Input
-                    value={marginMin}
-                    onChange={(e) => setMarginMin(Number(e.target.value))}
-                    className="h-6 text-xs px-1"
-                    type="number"
-                  />
-                </div>
-                <div className="col-span-2">
-                  <Input
-                    value={marginMax}
-                    onChange={(e) => setMarginMax(Number(e.target.value))}
-                    className="h-6 text-xs px-1"
-                    type="number"
-                  />
-                </div>
-                <div className="col-span-1 text-xs text-gray-500">%</div>
               </div>
-              
+
               <div className="flex justify-end">
                 <Button 
                   size="sm" 
                   onClick={handleRangeUpdate}
-                  className="h-7 bg-gray-800 hover:bg-gray-900"
+                  disabled={isRangeApplied}
+                  className={`h-7 bg-gray-800 hover:bg-gray-900 ${isRangeApplied ? 'opacity-50' : ''}`}
                 >
                   Apply
                 </Button>
