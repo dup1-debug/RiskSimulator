@@ -132,10 +132,11 @@ const RiskCard: React.FC<RiskCardProps> = ({ risk, isSelected, onClick }) => {
           <AccordionTrigger className="py-2 hover:no-underline">
             <div className="flex items-center gap-1">
               <span className="text-sm font-medium">EBITDA Target Adjustment</span>
-              <HoverCardTrigger>
-                <Lightbulb className="h-4 w-4 text-yellow-500" />
-              </HoverCardTrigger>
+              {/* Fixed: Properly nested HoverCard with HoverCardTrigger */}
               <HoverCard>
+                <HoverCardTrigger asChild>
+                  <Lightbulb className="h-4 w-4 text-yellow-500" />
+                </HoverCardTrigger>
                 <HoverCardContent className="w-64 p-3">
                   <p className="text-xs text-gray-600">Adjust the EBITDA target to see how it affects risk levels.</p>
                 </HoverCardContent>
